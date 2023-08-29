@@ -1,0 +1,31 @@
+name: pytorch-devcontainer-kiki
+services:
+  pytorch:
+    image: pytorch:2.0.0-kiki
+    build:
+      context: .
+      dockerfile: pytorch-2.0.0.Dockerfile
+      args:
+        USERNAME: ${USER}
+        USER_ID: ${UID}
+        GROUP_ID: ${GID}
+    container_name: pytorch-${USER}
+    hostname: pytorch-container-kiki
+    user: ${USER}
+    tty: true
+    stdin_open: true
+    shm_size: 32G
+    working_dir: /mnt/
+    volumes:
+      - ${HOME}/segmentation:/mnt/segmentation
+      - /mnt/hdd2/datasets/:/mnt/datasets:rw
+      - ${HOME}/work-dirs/:/mnt/work-dirs:rw
+      - ${HOME}/mmseg/mnt/mmseg
+      - /mnt/hdd2/logs/:/mnt/logs
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0','1']
+              capabilities: [gpu]
